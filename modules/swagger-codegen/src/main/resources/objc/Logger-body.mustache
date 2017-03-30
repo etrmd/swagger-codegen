@@ -6,7 +6,7 @@
 
 @implementation {{classPrefix}}Logger
 
-+ (instancetype) sharedLogger {
++ (instancetype)sharedLogger {
     static {{classPrefix}}Logger *shardLogger = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -54,7 +54,7 @@
     {{classPrefix}}DebugLog(message);
 }
 
-- (void) setLoggingFile:(NSString *)loggingFile {
+- (void)setLoggingFile:(NSString *)loggingFile {
     if(_loggingFile == loggingFile) {
         return;
     }

@@ -6,13 +6,13 @@
 
 @protocol {{classPrefix}}Api <NSObject>
 
-@property(readonly, nonatomic, strong) {{classPrefix}}ApiClient *apiClient;
+@property (readonly, nonatomic, strong) {{classPrefix}}ApiClient *apiClient;
 
--(instancetype) initWithApiClient:({{classPrefix}}ApiClient *)apiClient;
+- (instancetype)initWithApiClient:({{classPrefix}}ApiClient *)apiClient;
 
--(void) setDefaultHeaderValue:(NSString*) value forKey:(NSString*)key;
--(NSString*) defaultHeaderForKey:(NSString*)key;
+- (void)setDefaultHeaderValue:(NSString *)value forKey:(NSString *)key;
+- (NSString *)defaultHeaderForKey:(NSString *)key;
 
--(NSDictionary *)defaultHeaders;
+- (NSDictionary *)defaultHeaders;
 
 @end

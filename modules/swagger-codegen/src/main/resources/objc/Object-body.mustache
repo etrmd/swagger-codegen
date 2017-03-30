@@ -3,8 +3,8 @@
 @implementation {{classPrefix}}Object
 
 /**
- * Workaround for JSONModel multithreading issues
- * https://github.com/icanzilb/JSONModel/issues/441
+ *Workaround for JSONModel multithreading issues
+ *https://github.com/icanzilb/JSONModel/issues/441
  */
 - (instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError **)err {
     static NSMutableSet *classNames;
@@ -32,8 +32,8 @@
 }
 
 /**
- * Gets the string presentation of the object.
- * This method will be called when logging model object using `NSLog`.
+ *Gets the string presentation of the object.
+ *This method will be called when logging model object using `NSLog`.
  */
 - (NSString *)description {
     return [[self toDictionary] description];

@@ -5,11 +5,11 @@
 
 NSString * const k{{classPrefix}}ApplicationJSONType = @"application/json";
 
-NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
+NSString *{{classPrefix}}PercentEscapedStringFromString(NSString *string) {
     static NSString * const k{{classPrefix}}CharactersGeneralDelimitersToEncode = @":#[]@";
     static NSString * const k{{classPrefix}}CharactersSubDelimitersToEncode = @"!$&'()*+,;=";
 
-    NSMutableCharacterSet * allowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+    NSMutableCharacterSet *allowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     [allowedCharacterSet removeCharactersInString:[k{{classPrefix}}CharactersGeneralDelimitersToEncode stringByAppendingString:k{{classPrefix}}CharactersSubDelimitersToEncode]];
 
     static NSUInteger const batchSize = 50;
@@ -39,13 +39,13 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
 
 @interface {{classPrefix}}Sanitizer ()
 
-@property (nonatomic, strong) NSRegularExpression* jsonHeaderTypeExpression;
+@property (nonatomic, strong)NSRegularExpression*jsonHeaderTypeExpression;
 
 @end
 
 @implementation {{classPrefix}}Sanitizer
 
--(instancetype)init {
+- (instancetype)init {
     self = [super init];
     if ( !self ) {
         return nil;
@@ -55,7 +55,7 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
 }
 
 
-- (id) sanitizeForSerialization:(id) object {
+- (id)sanitizeForSerialization:(id)object {
     if (object == nil) {
         return nil;
     }
@@ -93,13 +93,13 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
     else {
         NSException *e = [NSException
                 exceptionWithName:@"InvalidObjectArgumentException"
-                           reason:[NSString stringWithFormat:@"*** The argument object: %@ is invalid", object]
+                           reason:[NSString stringWithFormat:@"***The argument object: %@ is invalid", object]
                          userInfo:nil];
         @throw e;
     }
 }
 
-- (NSString *) parameterToString:(id)param {
+- (NSString *)parameterToString:(id)param {
     if ([param isKindOfClass:[NSString class]]) {
         return param;
     }
@@ -119,7 +119,7 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
     else {
         NSException *e = [NSException
                 exceptionWithName:@"InvalidObjectArgumentException"
-                           reason:[NSString stringWithFormat:@"*** The argument object: %@ is invalid", param]
+                           reason:[NSString stringWithFormat:@"***The argument object: %@ is invalid", param]
                          userInfo:nil];
         @throw e;
     }
@@ -132,9 +132,9 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
 #pragma mark - Utility Methods
 
 /*
- * Detect `Accept` from accepts
+ *Detect `Accept` from accepts
  */
-- (NSString *) selectHeaderAccept:(NSArray *)accepts {
+- (NSString *)selectHeaderAccept:(NSArray *)accepts {
     if (accepts.count == 0) {
         return @"";
     }
@@ -149,15 +149,15 @@ NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string) {
 }
 
 /*
- * Detect `Content-Type` from contentTypes
+ *Detect `Content-Type` from contentTypes
  */
-- (NSString *) selectHeaderContentType:(NSArray *)contentTypes {
+- (NSString *)selectHeaderContentType:(NSArray *)contentTypes {
     if (contentTypes.count == 0) {
         return k{{classPrefix}}ApplicationJSONType;
     }
     NSMutableArray *lowerContentTypes = [[NSMutableArray alloc] initWithCapacity:[contentTypes count]];
     for (NSString *string in contentTypes) {
-        if([self.jsonHeaderTypeExpression matchesInString:string options:0 range:NSMakeRange(0, [string length])].count > 0){
+        if([self.jsonHeaderTypeExpression matchesInString:string options:0 range:NSMakeRange(0, [string length])].count > 0) {
             return k{{classPrefix}}ApplicationJSONType;
         }
         [lowerContentTypes addObject:[string lowercaseString]];

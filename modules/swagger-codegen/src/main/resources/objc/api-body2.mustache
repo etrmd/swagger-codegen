@@ -1,4 +1,5 @@
-{{#operations}}
+{{#operations}}{{#useReactiveObjC}}
+#import <ReactiveObjC/ReactiveObjC.h>{{/useReactiveObjC}}
 #import "{{classname}}.h"
 #import "{{classPrefix}}QueryParamCollection.h"
 #import "{{classPrefix}}ApiClient.h"
@@ -14,7 +15,7 @@
 
 @implementation {{classname}}
 
-NSString *k{{classname}}ErrorDomain = @"{{classname}}ErrorDomain";
+NSString*k{{classname}}ErrorDomain = @"{{classname}}ErrorDomain";
 NSInteger k{{classname}}MissingParamErrorCode = 234513;
 
 @synthesize apiClient = _apiClient;
@@ -37,11 +38,11 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 
 #pragma mark -
 
-- (NSString *)defaultHeaderForKey:(NSString *)key {
+- (NSString*)defaultHeaderForKey:(NSString*)key {
     return self.mutableDefaultHeaders[key];
 }
 
-- (void)setDefaultHeaderValue:(NSString *)value forKey:(NSString *)key {
+- (void)setDefaultHeaderValue:(NSString*)value forKey:(NSString*)key {
     [self.mutableDefaultHeaders setValue:value forKey:key];
 }
 
@@ -60,17 +61,17 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 ///
 /// {{/allParams}} @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
 ///
-- (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}) {{paramName}}{{/allParams}}
-    {{#hasParams}}completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler {
+- (NSURLSessionTask*) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler: {{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
+    {{paramName}}{{/secondaryParam}}: ({{{dataType}}}) {{paramName}}{{/allParams}}
+    {{#hasParams}}completionHandler: {{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError*error))handler {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set
     if ({{paramName}} == nil) {
         NSParameterAssert({{paramName}});
         if(handler) {
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey :[NSString stringWithFormat:NSLocalizedString(@"Missing required parameter '%@'", nil),@"{{paramName}}"] };
-            NSError *error = [NSError errorWithDomain:k{{classname}}ErrorDomain code:k{{classname}}MissingParamErrorCode userInfo:userInfo];
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey : [NSString stringWithFormat:NSLocalizedString(@"Missing required parameter '%@'", nil),@"{{paramName}}"] };
+            NSError*error = [NSError errorWithDomain:k{{classname}}ErrorDomain code:k{{classname}}MissingParamErrorCode userInfo:userInfo];
             handler({{#returnType}}nil, {{/returnType}}error);
         }
         return nil;
@@ -78,7 +79,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 
     {{/required}}
     {{/allParams}}
-    NSMutableString *resourcePath = [NSMutableString stringWithFormat:@"{{{path}}}"];
+    NSMutableString*resourcePath = [NSMutableString stringWithFormat:@"{{{path}}}"];
 
     NSMutableDictionary *pathParams = [[NSMutableDictionary alloc] init];
     {{#pathParams}}
@@ -87,16 +88,16 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     }
     {{/pathParams}}
 
-    NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary*queryParams = [[NSMutableDictionary alloc] init];
     {{#queryParams}}
     if ({{paramName}} != nil) {
         {{#collectionFormat}}
-        queryParams[@"{{baseName}}"] = [[{{classPrefix}}QueryParamCollection alloc] initWithValuesAndFormat:{{paramName}} format:@"{{collectionFormat}}"];
+        queryParams[@"{{baseName}}"] = [[{{classPrefix}}QueryParamCollection alloc] initWithValuesAndFormat: {{paramName}} format: @"{{collectionFormat}}"];
         {{/collectionFormat}}
         {{^collectionFormat}}queryParams[@"{{baseName}}"] = {{paramName}};{{/collectionFormat}}
     }
     {{/queryParams}}
-    NSMutableDictionary *headerParams = [NSMutableDictionary dictionaryWithDictionary:self.apiClient.configuration.defaultHeaders];
+    NSMutableDictionary*headerParams = [NSMutableDictionary dictionaryWithDictionary:self.apiClient.configuration.defaultHeaders];
     [headerParams addEntriesFromDictionary:self.defaultHeaders];
     {{#headerParams}}
     if ({{paramName}} != nil) {
@@ -137,19 +138,19 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     {{/formParams}}
     {{/bodyParam}}
 
-    return [self.apiClient requestWithPath:resourcePath
-                                    method:@"{{httpMethod}}"
-                                pathParams:pathParams
-                               queryParams:queryParams
-                                formParams:formParams
-                                     files:localVarFiles
-                                      body:bodyParam
-                              headerParams:headerParams
-                              authSettings:authSettings
-                        requestContentType:requestContentType
-                       responseContentType:responseContentType
-                              responseType:{{^returnType}}nil{{/returnType}}{{#returnType}}@"{{{ returnType }}}"{{/returnType}}
-                           completionBlock:^(id data, NSError *error) {
+    return [self.apiClient requestWithPath: resourcePath
+                                    method: @"{{httpMethod}}"
+                                pathParams: pathParams
+                               queryParams: queryParams
+                                formParams: formParams
+                                     files: localVarFiles
+                                      body: bodyParam
+                              headerParams: headerParams
+                              authSettings: authSettings
+                        requestContentType: requestContentType
+                       responseContentType: responseContentType
+                              responseType: {{^returnType}}nil{{/returnType}}{{#returnType}}@"{{{ returnType }}}"{{/returnType}}
+                           completionBlock: ^(id data, NSError *error) {
                                 if(handler) {
                                     handler({{#returnType}}({{{ returnType }}})data, {{/returnType}}error);
                                 }
@@ -165,10 +166,11 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 /// {{{notes}}}
 /// {{#allParams}} @param {{paramName}} {{{description}}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}
 ///
-/// {{/allParams}} @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
+/// {{/allParams}} @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
 ///
-- (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}) {{paramName}}{{/allParams}} {
+- (RACSignal *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
+    {{paramName}}{{/secondaryParam}}:({{{dataType}}}) {{paramName}}{{/allParams}}
+    {{#hasParams}}completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set
@@ -176,7 +178,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
         NSParameterAssert({{paramName}});
         if(handler) {
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey :[NSString stringWithFormat:NSLocalizedString(@"Missing required parameter '%@'", nil),@"{{paramName}}"] };
-            NSError *error = [NSError errorWithDomain:k{{classname}}ErrorDomain code:k{{classname}}MissingParamErrorCode userInfo:userInfo];
+            NSError*error = [NSError errorWithDomain:k{{classname}}ErrorDomain code:k{{classname}}MissingParamErrorCode userInfo:userInfo];
             handler({{#returnType}}nil, {{/returnType}}error);
         }
         return nil;
@@ -184,7 +186,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 
     {{/required}}
     {{/allParams}}
-    NSMutableString *resourcePath = [NSMutableString stringWithFormat:@"{{{path}}}"];
+    NSMutableString*resourcePath = [NSMutableString stringWithFormat:@"{{{path}}}"];
 
     NSMutableDictionary *pathParams = [[NSMutableDictionary alloc] init];
     {{#pathParams}}
@@ -193,7 +195,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     }
     {{/pathParams}}
 
-    NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary*queryParams = [[NSMutableDictionary alloc] init];
     {{#queryParams}}
     if ({{paramName}} != nil) {
         {{#collectionFormat}}
@@ -202,7 +204,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
         {{^collectionFormat}}queryParams[@"{{baseName}}"] = {{paramName}};{{/collectionFormat}}
     }
     {{/queryParams}}
-    NSMutableDictionary *headerParams = [NSMutableDictionary dictionaryWithDictionary:self.apiClient.configuration.defaultHeaders];
+    NSMutableDictionary*headerParams = [NSMutableDictionary dictionaryWithDictionary:self.apiClient.configuration.defaultHeaders];
     [headerParams addEntriesFromDictionary:self.defaultHeaders];
     {{#headerParams}}
     if ({{paramName}} != nil) {
@@ -216,7 +218,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     }
 
     // response content type
-    NSString *responseContentType = [[acceptHeader componentsSeparatedByString:@", "] firstObject] ?: @"";
+    NSString *responseContentType = [[acceptHeader componentsSeparatedByString:@", "] firstObject] ?:@"";
 
     // request content type
     NSString *requestContentType = [self.apiClient.sanitizer selectHeaderContentType:@[{{#consumes}}@"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/consumes}}]];
@@ -257,14 +259,9 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
                        responseContentType:responseContentType
                               responseType:{{^returnType}}nil{{/returnType}}{{#returnType}}@"{{{ returnType }}}"{{/returnType}}
                            completionBlock:^(id data, NSError *error) {
-                               if (error) {
-                                   [subscriber sendError:error];
-                                   return;
-                               }{{#returnType}}
-                               if (data) {
-                                   [subscriber sendNext:({{{ returnType }}})data];
-                               }{{/returnType}}
-                               [subscriber sendCompleted];
+                                if(handler) {
+                                    handler({{#returnType}}({{{ returnType }}})data, {{/returnType}}error);
+                                }
                             }];
         RACDisposable *disposable = [RACDisposable disposableWithBlock:^{
             [task cancel];

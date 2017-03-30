@@ -2,41 +2,41 @@
 
 {{>licenceInfo}}
 
-extern NSString * {{classPrefix}}PercentEscapedStringFromString(NSString *string);
+extern NSString *{{classPrefix}}PercentEscapedStringFromString(NSString *string);
 
 extern NSString * const k{{classPrefix}}ApplicationJSONType;
 
 @protocol {{classPrefix}}Sanitizer <NSObject>
 
 /**
- * Sanitize object for request
+ *Sanitize object for request
  *
- * @param object The query/path/header/form/body param to be sanitized.
+ *@param object The query/path/header/form/body param to be sanitized.
  */
-- (id) sanitizeForSerialization:(id) object;
+- (id)sanitizeForSerialization:(id)object;
 
 /**
- * Convert parameter to NSString
+ *Convert parameter to NSString
  */
-- (NSString *) parameterToString: (id) param;
+- (NSString *)parameterToString: (id)param;
 
 /**
- * Detects Accept header from accepts NSArray
+ *Detects Accept header from accepts NSArray
  *
- * @param accepts NSArray of header
+ *@param accepts NSArray of header
  *
- * @return The Accept header
+ *@return The Accept header
  */
--(NSString *) selectHeaderAccept:(NSArray *)accepts;
+- (NSString *)selectHeaderAccept:(NSArray *)accepts;
 
 /**
- * Detects Content-Type header from contentTypes NSArray
+ *Detects Content-Type header from contentTypes NSArray
  *
- * @param contentTypes NSArray of header
+ *@param contentTypes NSArray of header
  *
- * @return The Content-Type header
+ *@return The Content-Type header
  */
--(NSString *) selectHeaderContentType:(NSArray *)contentTypes;
+- (NSString *)selectHeaderContentType:(NSArray *)contentTypes;
 
 @end
 

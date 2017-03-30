@@ -15,7 +15,7 @@
 @interface {{classname}} : {{#parent}}{{{parent}}}{{/parent}}{{^parent}}{{classPrefix}}Object{{/parent}}
 
 {{#vars}}
-{{#description}}/* {{{description}}} {{^required}}[optional]{{/required}}
+{{#description}}/*{{{description}}} {{^required}}[optional]{{/required}}
  */{{/description}}
 @property(nonatomic) {{{ datatype }}} {{name}};
 {{/vars}}

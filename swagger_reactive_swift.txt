@@ -1,0 +1,90 @@
+diff --git a/modules/swagger-codegen/src/main/java/io/swagger/codegen/languages/Swift3Codegen.java b/modules/swagger-codegen/src/main/java/io/swagger/codegen/languages/Swift3Codegen.java
+index 626af3f82..2f1c2fa22 100644
+--- a/modules/swagger-codegen/src/main/java/io/swagger/codegen/languages/Swift3Codegen.java
++++ b/modules/swagger-codegen/src/main/java/io/swagger/codegen/languages/Swift3Codegen.java
+@@ -40,7 +40,8 @@ public class Swift3Codegen extends DefaultCodegen implements CodegenConfig {
+     public static final String DEFAULT_POD_AUTHORS = "Swagger Codegen";
+     protected static final String LIBRARY_PROMISE_KIT = "PromiseKit";
+     protected static final String LIBRARY_RX_SWIFT = "RxSwift";
+-    protected static final String[] RESPONSE_LIBRARIES = {LIBRARY_PROMISE_KIT, LIBRARY_RX_SWIFT};
++    protected static final String LIBRARY_REACTIVE_SWIFT = "ReactiveSwift";
++    protected static final String[] RESPONSE_LIBRARIES = {LIBRARY_PROMISE_KIT, LIBRARY_RX_SWIFT, LIBRARY_REACTIVE_SWIFT};
+     protected String projectName = "SwaggerClient";
+     protected boolean unwrapRequired;
+     protected boolean swiftUseApiNamespace;
+@@ -205,6 +206,9 @@ public class Swift3Codegen extends DefaultCodegen implements CodegenConfig {
+         if (ArrayUtils.contains(responseAs, LIBRARY_RX_SWIFT)) {
+             additionalProperties.put("useRxSwift", true);
+         }
++        if (ArrayUtils.contains(responseAs, LIBRARY_REACTIVE_SWIFT)) {
++            additionalProperties.put("useReactiveSwift", true);
++        }
+ 
+         // Setup swiftUseApiNamespace option, which makes all the API classes inner-class of {{projectName}}API
+         if (additionalProperties.containsKey(SWIFT_USE_API_NAMESPACE)) {
+diff --git a/modules/swagger-codegen/src/main/resources/swift3/Cartfile.mustache b/modules/swagger-codegen/src/main/resources/swift3/Cartfile.mustache
+index 101df9a7e..c95542b3a 100644
+--- a/modules/swagger-codegen/src/main/resources/swift3/Cartfile.mustache
++++ b/modules/swagger-codegen/src/main/resources/swift3/Cartfile.mustache
+@@ -1,3 +1,4 @@
+ github "Alamofire/Alamofire" >= 3.1.0{{#usePromiseKit}}
+ github "mxcl/PromiseKit" >=1.5.3{{/usePromiseKit}}{{#useRxSwift}}
+-github "ReactiveX/RxSwift" ~> 2.0{{/useRxSwift}}
++github "ReactiveX/RxSwift" ~> 2.0{{/useRxSwift}}{{#useReactiveSwift}}
++github "ReactiveCocoa/ReactiveSwift" ~> 1.0{{/useReactiveSwift}}
+diff --git a/modules/swagger-codegen/src/main/resources/swift3/Podspec.mustache b/modules/swagger-codegen/src/main/resources/swift3/Podspec.mustache
+index 0ff891316..7c8a5c4ee 100644
+--- a/modules/swagger-codegen/src/main/resources/swift3/Podspec.mustache
++++ b/modules/swagger-codegen/src/main/resources/swift3/Podspec.mustache
+@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
+   s.documentation_url = '{{podDocumentationURL}}'{{/podDocumentationURL}}
+   s.source_files = '{{projectName}}/Classes/Swaggers/**/*.swift'{{#usePromiseKit}}
+   s.dependency 'PromiseKit', '~> 4.0'{{/usePromiseKit}}{{#useRxSwift}}
+-  s.dependency 'RxSwift', '~> 3.0.0-beta.1'{{/useRxSwift}}
++  s.dependency 'RxSwift', '~> 3.0.0-beta.1'{{/useRxSwift}}{{#useReactiveSwift}}
++  s.dependency 'ReactiveSwift', '~> 1.0'{{/useReactiveSwift}}
+   s.dependency 'Alamofire', '~> 4.0'
+ end
+diff --git a/modules/swagger-codegen/src/main/resources/swift3/api.mustache b/modules/swagger-codegen/src/main/resources/swift3/api.mustache
+index 817560299..6b76bca21 100644
+--- a/modules/swagger-codegen/src/main/resources/swift3/api.mustache
++++ b/modules/swagger-codegen/src/main/resources/swift3/api.mustache
+@@ -7,7 +7,9 @@
+ 
+ import Alamofire{{#usePromiseKit}}
+ import PromiseKit{{/usePromiseKit}}{{#useRxSwift}}
+-import RxSwift{{/useRxSwift}}
++import RxSwift{{/useRxSwift}}{{#useReactiveSwift}}
++import ReactiveSwift
++import Result{{/useReactiveSwift}}
+ 
+ {{#swiftUseApiNamespace}}
+ extension {{projectName}}API {
+@@ -83,6 +85,27 @@ open class {{classname}}: APIBase {
+         }
+     }
+ {{/useRxSwift}}
++{{#useReactiveSwift}}
++    /**
++     {{#summary}}
++     {{{summary}}}
++     {{/summary}}{{#allParams}}
++     - parameter {{paramName}}: ({{#isFormParam}}form{{/isFormParam}}{{#isQueryParam}}query{{/isQueryParam}}{{#isPathParam}}path{{/isPathParam}}{{#isHeaderParam}}header{{/isHeaderParam}}{{#isBodyParam}}body{{/isBodyParam}}) {{description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}{{/allParams}}
++     - returns: SignalProducer<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}, AnyError>
++     */
++    open class func {{operationId}}({{#allParams}}{{paramName}}: {{#isEnum}}{{#isContainer}}{{{dataType}}}{{/isContainer}}{{^isContainer}}{{{datatypeWithEnum}}}_{{operationId}}{{/isContainer}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{^required}}? = nil{{/required}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) -> SignalProducer<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}, AnyError> {
++        return SignalProducer { (observer, disposable) -> () in
++            {{operationId}}({{#allParams}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) { ({{#returnType}}data, {{/returnType}}error) -> Void in
++                if let err = error {
++                    observer.send(error: AnyError(err))
++                } else {
++                    observer.send(value: data!)
++                    observer.sendCompleted()
++                }
++            }
++        }
++    }
++{{/useReactiveSwift}}
+ 
+     /**
+      {{#summary}}

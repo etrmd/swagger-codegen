@@ -24,6 +24,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     public static final String GIT_REPO_URL = "gitRepoURL";
     public static final String DEFAULT_LICENSE = "Proprietary";
     public static final String CORE_DATA = "coreData";
+    public static final String REACTIVE_OBJ_C = "reactiveObjC";
     
     protected Set<String> foundationClasses = new HashSet<String>();
     protected String podName = "SwaggerClient";
@@ -41,6 +42,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     protected String apiFilesPath = "Api/";
 
     protected boolean generateCoreData = false;
+    protected boolean generateReactiveObjC = false;
     
     protected Set<String> advancedMapingTypes = new HashSet<String>();
 
@@ -212,6 +214,14 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                 generateCoreData = true;
             }
         }
+
+        if (additionalProperties.containsKey(REACTIVE_OBJ_C)) {
+            Object reactiveObjC = additionalProperties.get(REACTIVE_OBJ_C);
+            if(((String)reactiveObjC).equalsIgnoreCase("true")) {
+                generateReactiveObjC = true;
+            }
+        }
+
         if (additionalProperties.containsKey(CLASS_PREFIX)) {
             setClassPrefix((String) additionalProperties.get(CLASS_PREFIX));
         }
@@ -247,6 +257,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         additionalProperties.put("apiDocPath", apiDocPath);
         additionalProperties.put("modelDocPath", modelDocPath);
         additionalProperties.put("useCoreData", generateCoreData);
+        additionalProperties.put("useReactiveObjC", generateReactiveObjC);
 
         modelPackage = podName;
         apiPackage = podName;

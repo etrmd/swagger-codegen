@@ -5,19 +5,19 @@
 #import "{{classPrefix}}QueryParamCollection.h"
 #import "{{classPrefix}}DefaultConfiguration.h"
 
-NSString *const {{classPrefix}}ResponseObjectErrorKey = @"{{classPrefix}}ResponseObject";
+NSString * const {{classPrefix}}ResponseObjectErrorKey = @"{{classPrefix}}ResponseObject";
 
 static NSString * const k{{classPrefix}}ContentDispositionKey = @"Content-Disposition";
 
-static NSDictionary * {{classPrefix}}__headerFieldsForResponse(NSURLResponse *response) {
+static NSDictionary *{{classPrefix}}__headerFieldsForResponse(NSURLResponse *response) {
     if(![response isKindOfClass:[NSHTTPURLResponse class]]) {
         return nil;
     }
     return ((NSHTTPURLResponse*)response).allHeaderFields;
 }
 
-static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
-    NSDictionary * headers = {{classPrefix}}__headerFieldsForResponse(response);
+static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
+    NSDictionary *headers = {{classPrefix}}__headerFieldsForResponse(response);
     if(!headers[k{{classPrefix}}ContentDispositionKey]) {
         return [NSString stringWithFormat:@"%@", [[NSProcessInfo processInfo] globallyUniqueString]];
     }
@@ -31,9 +31,9 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
 @interface {{classPrefix}}ApiClient ()
 
-@property (nonatomic, strong, readwrite) id<{{classPrefix}}Configuration> configuration;
+@property (nonatomic, strong, readwrite)id<{{classPrefix}}Configuration> configuration;
 
-@property (nonatomic, strong) NSArray<NSString*>* downloadTaskResponseTypes;
+@property (nonatomic, strong)NSArray<NSString*>*downloadTaskResponseTypes;
 
 @end
 
@@ -41,7 +41,7 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
 #pragma mark - Singleton Methods
 
-+ (instancetype) sharedClient {
++ (instancetype)sharedClient {
     static {{classPrefix}}ApiClient *sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -74,8 +74,8 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
         _downloadTaskResponseTypes = @[@"NSURL*", @"NSURL"];
 
-        AFHTTPRequestSerializer* afhttpRequestSerializer = [AFHTTPRequestSerializer serializer];
-        {{classPrefix}}JSONRequestSerializer * swgjsonRequestSerializer = [{{classPrefix}}JSONRequestSerializer serializer];
+        AFHTTPRequestSerializer*afhttpRequestSerializer = [AFHTTPRequestSerializer serializer];
+        {{classPrefix}}JSONRequestSerializer *swgjsonRequestSerializer = [{{classPrefix}}JSONRequestSerializer serializer];
         _requestSerializerForContentType = @{k{{classPrefix}}ApplicationJSONType : swgjsonRequestSerializer,
             @"application/x-www-form-urlencoded": afhttpRequestSerializer,
             @"multipart/form-data": afhttpRequestSerializer
@@ -88,9 +88,9 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
 #pragma mark - Task Methods
 
-- (NSURLSessionDataTask*) taskWithCompletionBlock: (NSURLRequest *)request completionBlock: (void (^)(id, NSError *))completionBlock {
+- (NSURLSessionDataTask*)taskWithCompletionBlock: (NSURLRequest *)request completionBlock: (void (^)(id, NSError *))completionBlock {
 
-    NSURLSessionDataTask *task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse *_Nonnull response, id  _Nullable responseObject, NSError *_Nullable error) {
         {{classPrefix}}DebugLogResponse(response, responseObject,request,error);
         if(!error) {
             completionBlock(responseObject, nil);
@@ -98,7 +98,7 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
         }
         NSMutableDictionary *userInfo = [error.userInfo mutableCopy];
         if (responseObject) {
-            // Add in the (parsed) response body.
+            // Add in the (parsed)response body.
             userInfo[{{classPrefix}}ResponseObjectErrorKey] = responseObject;
         }
         NSError *augmentedError = [error initWithDomain:error.domain code:error.code userInfo:userInfo];
@@ -108,11 +108,11 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
     return task;
 }
 
-- (NSURLSessionDataTask*) downloadTaskWithCompletionBlock: (NSURLRequest *)request completionBlock: (void (^)(id, NSError *))completionBlock {
+- (NSURLSessionDataTask*)downloadTaskWithCompletionBlock: (NSURLRequest *)request completionBlock: (void (^)(id, NSError *))completionBlock {
 
-    __block NSString * tempFolderPath = [self.configuration.tempFolderPath copy];
+    __block NSString *tempFolderPath = [self.configuration.tempFolderPath copy];
 
-    NSURLSessionDataTask* task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    NSURLSessionDataTask*task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         {{classPrefix}}DebugLogResponse(response, responseObject,request,error);
 
         if(error) {
@@ -141,21 +141,21 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
 #pragma mark - Perform Request Methods
 
-- (NSURLSessionTask*) requestWithPath: (NSString*) path
-                               method: (NSString*) method
-                           pathParams: (NSDictionary *) pathParams
-                          queryParams: (NSDictionary*) queryParams
-                           formParams: (NSDictionary *) formParams
-                                files: (NSDictionary *) files
-                                 body: (id) body
-                         headerParams: (NSDictionary*) headerParams
-                         authSettings: (NSArray *) authSettings
-                   requestContentType: (NSString*) requestContentType
-                  responseContentType: (NSString*) responseContentType
-                         responseType: (NSString *) responseType
+- (NSURLSessionTask*)requestWithPath: (NSString*)path
+                               method: (NSString*)method
+                           pathParams: (NSDictionary *)pathParams
+                          queryParams: (NSDictionary*)queryParams
+                           formParams: (NSDictionary *)formParams
+                                files: (NSDictionary *)files
+                                 body: (id)body
+                         headerParams: (NSDictionary*)headerParams
+                         authSettings: (NSArray *)authSettings
+                   requestContentType: (NSString*)requestContentType
+                  responseContentType: (NSString*)responseContentType
+                         responseType: (NSString *)responseType
                       completionBlock: (void (^)(id, NSError *))completionBlock {
 
-    AFHTTPRequestSerializer <AFURLRequestSerialization> * requestSerializer = [self requestSerializerForRequestContentType:requestContentType];
+    AFHTTPRequestSerializer <AFURLRequestSerialization> *requestSerializer = [self requestSerializerForRequestContentType:requestContentType];
 
     __weak id<{{classPrefix}}Sanitizer> sanitizer = self.sanitizer;
 
@@ -173,20 +173,20 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 
     NSMutableString *resourcePath = [NSMutableString stringWithString:path];
     [pathParams enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString * safeString = ([obj isKindOfClass:[NSString class]]) ? obj : [NSString stringWithFormat:@"%@", obj];
+        NSString *safeString = ([obj isKindOfClass:[NSString class]])? obj : [NSString stringWithFormat:@"%@", obj];
         safeString = {{classPrefix}}PercentEscapedStringFromString(safeString);
         [resourcePath replaceCharactersInRange:[resourcePath rangeOfString:[NSString stringWithFormat:@"{%@}", key]] withString:safeString];
     }];
 
-    NSString* pathWithQueryParams = [self pathWithQueryParamsToString:resourcePath queryParams:queryParams];
+    NSString*pathWithQueryParams = [self pathWithQueryParamsToString:resourcePath queryParams:queryParams];
     if ([pathWithQueryParams hasPrefix:@"/"]) {
         pathWithQueryParams = [pathWithQueryParams substringFromIndex:1];
     }
 
-    NSString* urlString = [[NSURL URLWithString:pathWithQueryParams relativeToURL:self.baseURL] absoluteString];
+    NSString*urlString = [[NSURL URLWithString:pathWithQueryParams relativeToURL:self.baseURL] absoluteString];
 
     NSError *requestCreateError = nil;
-    NSMutableURLRequest * request = nil;
+    NSMutableURLRequest *request = nil;
     if (files.count > 0) {
         request = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                                                    [formParams enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -213,8 +213,8 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
         return nil;
     }
 
-    if ([headerParams count] > 0){
-        for(NSString * key in [headerParams keyEnumerator]){
+    if ([headerParams count] > 0) {
+        for(NSString *key in [headerParams keyEnumerator]) {
             [request setValue:[headerParams valueForKey:key] forHTTPHeaderField:key];
         }
     }
@@ -230,12 +230,12 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
             completionBlock(data, error);
         }];
     } else {
-        __weak typeof(self) weakSelf = self;
+        __weak typeof(self)weakSelf = self;
         task = [self taskWithCompletionBlock:request completionBlock:^(id data, NSError *error) {
-            NSError * serializationError;
+            NSError *serializationError;
             id response = [weakSelf.responseDeserializer deserialize:data class:responseType error:&serializationError];
 
-            if(!response && !error){
+            if(!response && !error) {
                 error = serializationError;
             }
             completionBlock(response, error);
@@ -247,8 +247,8 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
     return task;
 }
 
--(AFHTTPRequestSerializer <AFURLRequestSerialization> *)requestSerializerForRequestContentType:(NSString *)requestContentType {
-    AFHTTPRequestSerializer <AFURLRequestSerialization> * serializer = self.requestSerializerForContentType[requestContentType];
+- (AFHTTPRequestSerializer <AFURLRequestSerialization> *)requestSerializerForRequestContentType:(NSString *)requestContentType {
+    AFHTTPRequestSerializer <AFURLRequestSerialization> *serializer = self.requestSerializerForContentType[requestContentType];
     if(!serializer) {
         NSAssert(NO, @"Unsupported request content type %@", requestContentType);
         serializer = [AFHTTPRequestSerializer serializer];
@@ -258,26 +258,26 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 }
 
 //Added for easier override to modify request
--(void)postProcessRequest:(NSMutableURLRequest *)request {
+- (void)postProcessRequest:(NSMutableURLRequest *)request {
 
 }
 
 #pragma mark -
 
-- (NSString*) pathWithQueryParamsToString:(NSString*) path queryParams:(NSDictionary*) queryParams {
+- (NSString*)pathWithQueryParamsToString:(NSString*)path queryParams:(NSDictionary*)queryParams {
     if(queryParams.count == 0) {
         return path;
     }
-    NSString * separator = nil;
+    NSString *separator = nil;
     NSUInteger counter = 0;
 
-    NSMutableString * requestUrl = [NSMutableString stringWithFormat:@"%@", path];
+    NSMutableString *requestUrl = [NSMutableString stringWithFormat:@"%@", path];
 
     NSDictionary *separatorStyles = @{@"csv" : @",",
             @"tsv" : @"\t",
             @"pipes": @"|"
     };
-    for(NSString * key in [queryParams keyEnumerator]){
+    for(NSString *key in [queryParams keyEnumerator]) {
         if (counter == 0) {
             separator = @"?";
         } else {
@@ -288,30 +288,30 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
             continue;
         }
         NSString *safeKey = {{classPrefix}}PercentEscapedStringFromString(key);
-        if ([queryParam isKindOfClass:[NSString class]]){
+        if ([queryParam isKindOfClass:[NSString class]]) {
             [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, {{classPrefix}}PercentEscapedStringFromString(queryParam)]];
 
-        } else if ([queryParam isKindOfClass:[{{classPrefix}}QueryParamCollection class]]){
-            {{classPrefix}}QueryParamCollection * coll = ({{classPrefix}}QueryParamCollection*) queryParam;
-            NSArray* values = [coll values];
-            NSString* format = [coll format];
+        } else if ([queryParam isKindOfClass:[{{classPrefix}}QueryParamCollection class]]) {
+            {{classPrefix}}QueryParamCollection *coll = ({{classPrefix}}QueryParamCollection*)queryParam;
+            NSArray*values = [coll values];
+            NSString*format = [coll format];
 
             if([format isEqualToString:@"multi"]) {
                 for(id obj in values) {
                     if (counter > 0) {
                         separator = @"&";
                     }
-                    NSString * safeValue = {{classPrefix}}PercentEscapedStringFromString([NSString stringWithFormat:@"%@",obj]);
+                    NSString *safeValue = {{classPrefix}}PercentEscapedStringFromString([NSString stringWithFormat:@"%@",obj]);
                     [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
                     counter += 1;
                 }
                 continue;
             }
-            NSString * separatorStyle = separatorStyles[format];
-            NSString * safeValue = {{classPrefix}}PercentEscapedStringFromString([values componentsJoinedByString:separatorStyle]);
+            NSString *separatorStyle = separatorStyles[format];
+            NSString *safeValue = {{classPrefix}}PercentEscapedStringFromString([values componentsJoinedByString:separatorStyle]);
             [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
         } else {
-            NSString * safeValue = {{classPrefix}}PercentEscapedStringFromString([NSString stringWithFormat:@"%@",queryParam]);
+            NSString *safeValue = {{classPrefix}}PercentEscapedStringFromString([NSString stringWithFormat:@"%@",queryParam]);
             [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
         }
         counter += 1;
@@ -320,9 +320,9 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
 }
 
 /**
- * Update header and query params based on authentication settings
+ *Update header and query params based on authentication settings
  */
-- (void) updateHeaderParams:(NSDictionary * *)headers queryParams:(NSDictionary * *)querys WithAuthSettings:(NSArray *)authSettings {
+- (void)updateHeaderParams:(NSDictionary **)headers queryParams:(NSDictionary **)querys WithAuthSettings:(NSArray *)authSettings {
 
     if ([authSettings count] == 0) {
         return;
@@ -352,7 +352,7 @@ static NSString * {{classPrefix}}__fileNameForResponse(NSURLResponse *response) 
     *querys = [NSDictionary dictionaryWithDictionary:querysWithAuth];
 }
 
-- (AFSecurityPolicy *) createSecurityPolicy {
+- (AFSecurityPolicy *)createSecurityPolicy {
     AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
 
     id<{{classPrefix}}Configuration> config = self.configuration;

@@ -4,9 +4,9 @@
 
 @interface {{classPrefix}}DefaultConfiguration ()
 
-@property (nonatomic, strong) NSMutableDictionary *mutableDefaultHeaders;
-@property (nonatomic, strong) NSMutableDictionary *mutableApiKey;
-@property (nonatomic, strong) NSMutableDictionary *mutableApiKeyPrefix;
+@property (nonatomic, strong)NSMutableDictionary *mutableDefaultHeaders;
+@property (nonatomic, strong)NSMutableDictionary *mutableApiKey;
+@property (nonatomic, strong)NSMutableDictionary *mutableApiKeyPrefix;
 
 @end
 
@@ -14,7 +14,7 @@
 
 #pragma mark - Singleton Methods
 
-+ (instancetype) sharedConfig {
++ (instancetype)sharedConfig {
     static {{classPrefix}}DefaultConfiguration *shardConfig = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -25,7 +25,7 @@
 
 #pragma mark - Initialize Methods
 
-- (instancetype) init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _host = @"{{{basePath}}}";
@@ -44,7 +44,7 @@
 
 #pragma mark - Instance Methods
 
-- (NSString *) getApiKeyWithPrefix:(NSString *)key {
+- (NSString *)getApiKeyWithPrefix:(NSString *)key {
     NSString *prefix = self.apiKeyPrefix[key];
     NSString *apiKey = self.apiKey[key];
     if (prefix && apiKey != (id)[NSNull null] && apiKey.length > 0) { // both api key prefix and api key are set
@@ -58,13 +58,13 @@
     }
 }
 
-- (NSString *) getBasicAuthToken {
+- (NSString *)getBasicAuthToken {
 
     NSString *basicAuthToken = [{{classPrefix}}BasicAuthTokenProvider createBasicAuthTokenWithUsername:self.username password:self.password];
     return basicAuthToken;
 }
 
-- (NSString *) getAccessToken {
+- (NSString *)getAccessToken {
     if (self.accessToken.length == 0) { // token not set, return empty string
         return @"";
     } else {
@@ -74,35 +74,35 @@
 
 #pragma mark - Setter Methods
 
-- (void) setApiKey:(NSString *)apiKey forApiKeyIdentifier:(NSString *)identifier {
+- (void)setApiKey:(NSString *)apiKey forApiKeyIdentifier:(NSString *)identifier {
     [self.mutableApiKey setValue:apiKey forKey:identifier];
 }
 
-- (void) removeApiKey:(NSString *)identifier {
+- (void)removeApiKey:(NSString *)identifier {
     [self.mutableApiKey removeObjectForKey:identifier];
 }
 
-- (void) setApiKeyPrefix:(NSString *)prefix forApiKeyPrefixIdentifier:(NSString *)identifier {
+- (void)setApiKeyPrefix:(NSString *)prefix forApiKeyPrefixIdentifier:(NSString *)identifier {
     [self.mutableApiKeyPrefix setValue:prefix forKey:identifier];
 }
 
-- (void) removeApiKeyPrefix:(NSString *)identifier {
+- (void)removeApiKeyPrefix:(NSString *)identifier {
     [self.mutableApiKeyPrefix removeObjectForKey:identifier];
 }
 
 #pragma mark - Getter Methods
 
-- (NSDictionary *) apiKey {
+- (NSDictionary *)apiKey {
     return [NSDictionary dictionaryWithDictionary:self.mutableApiKey];
 }
 
-- (NSDictionary *) apiKeyPrefix {
+- (NSDictionary *)apiKeyPrefix {
     return [NSDictionary dictionaryWithDictionary:self.mutableApiKeyPrefix];
 }
 
 #pragma mark -
 
-- (NSDictionary *) authSettings {
+- (NSDictionary *)authSettings {
     return @{
 {{#authMethods}}
 {{#isApiKey}}
@@ -136,11 +136,11 @@
                };
 }
 
--(BOOL)debug {
+- (BOOL)debug {
     return self.logger.isEnabled;
 }
 
--(void)setDebug:(BOOL)debug {
+- (void)setDebug:(BOOL)debug {
     self.logger.enabled = debug;
 }
 
@@ -152,7 +152,7 @@
     self.mutableDefaultHeaders[key] = value;
 }
 
--(void) removeDefaultHeaderForKey:(NSString*)key {
+- (void)removeDefaultHeaderForKey:(NSString*)key {
     [self.mutableDefaultHeaders removeObjectForKey:key];
 }
 

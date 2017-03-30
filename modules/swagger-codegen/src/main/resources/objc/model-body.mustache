@@ -14,17 +14,17 @@
   return self;
 }
 {{#vars}}{{^vendorExtensions.x-unique-id-key}}{{/vendorExtensions.x-unique-id-key}}{{#vendorExtensions.x-unique-id-key}}
--(NSString*)indexPropertyName {
+- (NSString*)indexPropertyName {
     return @"{{name}}";
 }
 {{/vendorExtensions.x-unique-id-key}}{{/vars}}
 {{#discriminator}}
 /**
- * Maps "discriminator" value to the sub-class name, so that inheritance is supported.
+ *Maps "discriminator" value to the sub-class name, so that inheritance is supported.
  */
 - (id)initWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err {
-    NSString * discriminatedClassName = [dict valueForKey:@"{{discriminator}}"];
-    if(discriminatedClassName == nil ){
+    NSString *discriminatedClassName = [dict valueForKey:@"{{discriminator}}"];
+    if(discriminatedClassName == nil ) {
          return [super initWithDictionary:dict error:err];
     }
     Class class = NSClassFromString([@"{{classPrefix}}" stringByAppendingString:discriminatedClassName]);
@@ -39,17 +39,17 @@
 {{/discriminator}}
 
 /**
- * Maps json key to property name.
- * This method is used by `JSONModel`.
+ *Maps json key to property name.
+ *This method is used by `JSONModel`.
  */
 + (JSONKeyMapper *)keyMapper {
   return [[JSONKeyMapper alloc] initWithModelToJSONDictionary:@{ {{#vars}}@"{{name}}": @"{{baseName}}"{{#hasMore}}, {{/hasMore}}{{/vars}} }];
 }
 
 /**
- * Indicates whether the property with the given name is optional.
- * If `propertyName` is optional, then return `YES`, otherwise return `NO`.
- * This method is used by `JSONModel`.
+ *Indicates whether the property with the given name is optional.
+ *If `propertyName` is optional, then return `YES`, otherwise return `NO`.
+ *This method is used by `JSONModel`.
  */
 + (BOOL)propertyIsOptional:(NSString *)propertyName {
 
