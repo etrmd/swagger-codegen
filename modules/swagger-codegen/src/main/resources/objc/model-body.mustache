@@ -57,6 +57,13 @@
   return [optionalProperties containsObject:propertyName];
 }
 
+/**
+ * A fallback method for 'lightened' models.
+ */
+- (id)valueForUndefinedKey:(NSString *)key {
+    return nil;
+}
+
 {{/model}}
 @end
 {{/models}}
