@@ -21,15 +21,16 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
 /// {{#allParams}}
-/// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}
-/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/hasParams}}
+/// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
+/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// {{#responses}}
 ///  code:{{{code}}} message:"{{{message}}}"{{#hasMore}},{{/hasMore}}{{/responses}}
 ///
 /// @return {{{returnType}}}
 - (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}
-    {{#hasParams}} uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler;
+    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
+    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}
+    completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler;
 
 {{newline}}
 {{/operation}}
@@ -40,15 +41,16 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
 /// {{#allParams}}
-/// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}
-/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/hasParams}}
+/// @param {{paramName}} {{description}}{{^description}}no description{{/description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
+/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// {{#responses}}
 ///
 ///  code:{{{code}}} message:"{{{message}}}"{{#hasMore}},{{/hasMore}}{{/responses}}
 ///
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
 - (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}} uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/hasParams}};
+    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
+    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}};
 
 {{newline}}
 {{/operation}}
