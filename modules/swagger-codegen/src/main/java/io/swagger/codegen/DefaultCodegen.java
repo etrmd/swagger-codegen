@@ -2212,6 +2212,9 @@ public class DefaultCodegen {
         op.isRestfulDestroy = op.isRestfulDestroy();
         op.isRestful = op.isRestful();
 
+
+        op.isUploadProgressSupported = op.isUploadProgressSupported();
+
         return op;
     }
 

@@ -14,6 +14,7 @@ public class CodegenOperation {
     public boolean hasAuthMethods, hasConsumes, hasProduces, hasParams, hasOptionalParams,
             returnTypeIsPrimitive, returnSimpleType, subresourceOperation, isMapContainer,
             isListContainer, isMultipart, hasMore = true,
+            isUploadProgressSupported,
             isResponseBinary = false, isResponseFile = false, hasReference = false,
             isRestfulIndex, isRestfulShow, isRestfulCreate, isRestfulUpdate, isRestfulDestroy,
             isRestful;
@@ -128,6 +129,15 @@ public class CodegenOperation {
         return "POST".equals(httpMethod) && "".equals(pathWithoutBaseName());
     }
 
+    /**
+     * Check if operation supports upload progress monitoring.
+     * @return true if supported.
+     */
+    public boolean isUploadProgressSupported() {
+        boolean value = Arrays.asList("PUT", "PATCH", "POST").contains(httpMethod);
+        return value;
+    }
+    
     /**
      * Check if act as Restful update method
      *
