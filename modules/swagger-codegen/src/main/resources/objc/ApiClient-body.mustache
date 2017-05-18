@@ -159,12 +159,14 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
 
     __weak id<{{classPrefix}}Sanitizer> sanitizer = self.sanitizer;
 
+    BOOL isBodyInputStream = [body isKindOfClass:[NSInputStream class]];
+
     // sanitize parameters
     pathParams = [sanitizer sanitizeForSerialization:pathParams];
     queryParams = [sanitizer sanitizeForSerialization:queryParams];
     headerParams = [sanitizer sanitizeForSerialization:headerParams];
     formParams = [sanitizer sanitizeForSerialization:formParams];
-    if(![body isKindOfClass:[NSData class]]) {
+    if(![body isKindOfClass:[NSData class]] && !isBodyInputStream) {
         body = [sanitizer sanitizeForSerialization:body];
     }
 
@@ -205,7 +207,12 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
             request = [requestSerializer requestWithMethod:method URLString:urlString parameters:formParams error:&requestCreateError];
         }
         if (body) {
-            request = [requestSerializer requestWithMethod:method URLString:urlString parameters:body error:&requestCreateError];
+            if (isBodyInputStream) {
+                request = [requestSerializer requestWithMethod:method URLString:urlString parameters:nil error:&requestCreateError];
+                request.HTTPBodyStream = body;
+            } else {
+                request = [requestSerializer requestWithMethod:method URLString:urlString parameters:body error:&requestCreateError];
+            }
         }
     }
     if(!request) {

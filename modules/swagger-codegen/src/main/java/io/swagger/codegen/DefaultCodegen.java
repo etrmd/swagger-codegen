@@ -2214,6 +2214,7 @@ public class DefaultCodegen {
 
 
         op.isUploadProgressSupported = op.isUploadProgressSupported();
+        op.hasOctetStreamBody = op.getHasOctetStreamBody();
 
         return op;
     }

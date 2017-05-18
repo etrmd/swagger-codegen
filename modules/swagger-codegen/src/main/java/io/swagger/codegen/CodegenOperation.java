@@ -15,6 +15,7 @@ public class CodegenOperation {
             returnTypeIsPrimitive, returnSimpleType, subresourceOperation, isMapContainer,
             isListContainer, isMultipart, hasMore = true,
             isUploadProgressSupported,
+            hasOctetStreamBody,
             isResponseBinary = false, isResponseFile = false, hasReference = false,
             isRestfulIndex, isRestfulShow, isRestfulCreate, isRestfulUpdate, isRestfulDestroy,
             isRestful;
@@ -138,6 +139,21 @@ public class CodegenOperation {
         return value;
     }
     
+    /**
+     * Check if there is only one binary type body.
+     * @return true if body parameters has just one binary type parameter.
+     */
+    public boolean getHasOctetStreamBody() {
+        boolean value = bodyParams != null
+            && bodyParams.size() == 1
+            && "byte".equals(bodyParams.get(0).dataFormat)
+            && "string".equals(bodyParams.get(0).dataType);
+
+        LOGGER.info("+++++ CodegenOperation.getHasOctetStreamBody() value is '{}'", value);
+
+        return value;
+    }
+
     /**
      * Check if act as Restful update method
      *
