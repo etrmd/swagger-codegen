@@ -62,7 +62,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         defaultIncludes.add("bool");
         defaultIncludes.add("BOOL");
         defaultIncludes.add("int");
-        defaultIncludes.add("NSURL");
+        defaultIncludes.add("NSInputStream");
         defaultIncludes.add("NSString");
         defaultIncludes.add("NSObject");
         defaultIncludes.add("NSArray");
@@ -80,7 +80,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         advancedMapingTypes.add("NSMutableDictionary");
         advancedMapingTypes.add("NSObject");
         advancedMapingTypes.add("NSNumber");
-        advancedMapingTypes.add("NSURL");
+        advancedMapingTypes.add("NSInputStream");
         advancedMapingTypes.add("NSString");
         advancedMapingTypes.add("NSDate");
 
@@ -90,7 +90,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         languageSpecificPrimitives.add("NSObject");
         languageSpecificPrimitives.add("NSDate");
         languageSpecificPrimitives.add("NSData");
-        languageSpecificPrimitives.add("NSURL");
+        languageSpecificPrimitives.add("NSInputStream");
         languageSpecificPrimitives.add("bool");
         languageSpecificPrimitives.add("BOOL");
 
@@ -111,7 +111,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("bigdecimal", "NSNumber");
         typeMapping.put("List", "NSArray");
         typeMapping.put("object", "NSObject");
-        typeMapping.put("file", "NSURL");
+        typeMapping.put("file", "NSInputStream");
         typeMapping.put("binary", "NSData");
         typeMapping.put("bytearray", "NSData");
         typeMapping.put("byte", "NSData");
@@ -150,7 +150,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                         "NSString",
                         "NSDate",
                         "NSData",
-                        "NSURL",
+                        "NSInputStream",
                         "NSDictionary")
         );
 
@@ -718,12 +718,12 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
             if (example == null) {
                 example = "True";
             }
-        } else if ("NSURL*".equalsIgnoreCase(type)) {
+        } else if ("NSInputStream*".equalsIgnoreCase(type)) {
             if (example == null) {
                 example = "/path/to/file";
             }
-            //[NSURL fileURLWithPath:@"path/to/file"]
-            example = "[NSURL fileURLWithPath:@\"" + escapeText(example) + "\"]";
+            //[NSInputStream fileURLWithPath:@"path/to/file"]
+            example = "[NSInputStream inputStreamWithURL:[NSURL fileURLWithPath:@\"" + escapeText(example) + "\"]]";
         /*} else if ("NSDate".equalsIgnoreCase(type)) {
             if (example == null) {
                 example = "2013-10-20";

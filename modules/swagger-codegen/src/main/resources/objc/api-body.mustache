@@ -57,14 +57,12 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 /// {{{summary}}}{{^summary}}no summary{{/summary}}
 /// {{{notes}}}{{^notes}}no notes{{/notes}}
 /// {{#allParams}}
-/// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-/// @param httpBodyStream An input stream used for reading a body for the request.{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+/// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
 /// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
 ///
 - (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-    httpBodyStream:(NSInputStream * _Nullable)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
     uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}
     completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler {
     {{#allParams}}
@@ -139,11 +137,6 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     localVarFiles[@"{{paramName}}"] = {{paramName}};
     {{/isFile}}
     {{/formParams}}
-    {{^formParams}}
-    {{#hasOctetStreamBody}}
-    bodyParam = httpBodyStream;
-    {{/hasOctetStreamBody}}
-    {{/formParams}}
     {{/bodyParam}}
 
     NSURLSessionTask *task = [self.apiClient requestWithPath:resourcePath
@@ -179,14 +172,12 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 /// {{{summary}}}
 /// {{{notes}}}
 /// {{#allParams}}
-/// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-/// @param httpBodyStream An input stream used for reading a body for the request.{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+/// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
 /// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
 ///
 - (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
-    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-    httpBodyStream:(NSInputStream * _Nullable)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+    {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
     uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}} {
     {{#allParams}}
     {{#required}}
@@ -257,11 +248,6 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
     {{#isFile}}
     localVarFiles[@"{{paramName}}"] = {{paramName}};
     {{/isFile}}
-    {{/formParams}}
-    {{^formParams}}
-    {{#hasOctetStreamBody}}
-    bodyParam = httpBodyStream;
-    {{/hasOctetStreamBody}}
     {{/formParams}}
     {{/bodyParam}}
 
