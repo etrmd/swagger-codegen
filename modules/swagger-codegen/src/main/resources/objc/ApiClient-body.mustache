@@ -76,11 +76,10 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
 
         AFHTTPRequestSerializer*afhttpRequestSerializer = [AFHTTPRequestSerializer serializer];
         {{classPrefix}}JSONRequestSerializer *swgjsonRequestSerializer = [{{classPrefix}}JSONRequestSerializer serializer];
-        _requestSerializerForContentType = @{k{{classPrefix}}ApplicationJSONType : swgjsonRequestSerializer,
-            @"application/x-www-form-urlencoded": afhttpRequestSerializer,
-            @"multipart/form-data": afhttpRequestSerializer
-        };
-        self.securityPolicy = [self createSecurityPolicy];
+        _requestSerializerForContentType = @{ kSWGApplicationJSONType : swgjsonRequestSerializer,
+                                              @"application/x-www-form-urlencoded": afhttpRequestSerializer,
+                                              @"multipart/form-data" : afhttpRequestSerializer,
+                                              @"application/octet-stream" : afhttpRequestSerializer };
         self.responseSerializer = [AFHTTPResponseSerializer serializer];
     }
     return self;
