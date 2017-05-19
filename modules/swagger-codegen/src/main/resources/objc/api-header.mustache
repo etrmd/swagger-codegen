@@ -20,6 +20,8 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{{summary}}}
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
+/// HTTP Method: {{{httpMethod}}}
+///
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
 /// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
@@ -29,7 +31,7 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// @return {{{returnType}}}
 - (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}
+    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}
     completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler;
 
 {{newline}}
@@ -39,6 +41,8 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 {{#operation}}
 /// {{{summary}}}
 /// {{#notes}}{{{notes}}}{{/notes}}
+///
+/// HTTP Method: {{{httpMethod}}}
 ///
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^description}}no description{{/description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
@@ -50,7 +54,7 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
 - (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}};
+    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}};
 
 {{newline}}
 {{/operation}}
