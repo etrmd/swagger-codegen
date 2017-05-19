@@ -20,6 +20,7 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{{summary}}}
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
+/// HTTP Method: {{{httpMethod}}}
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
 /// @param httpBodyStream An input stream used for reading a body for the request.{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
@@ -30,8 +31,8 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// @return {{{returnType}}}
 - (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-    httpBodyStream:(NSInputStream * _Nullable)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}
+    httpBodyStream:(NSInputStream *)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}
     completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler;
 
 {{newline}}
@@ -42,6 +43,7 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{{summary}}}
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
+/// HTTP Method: {{{httpMethod}}}
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^description}}no description{{/description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
 /// @param httpBodyStream An input stream used for reading a body for the request.{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
@@ -53,8 +55,8 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
 - (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#hasOctetStreamBody}}
-    httpBodyStream:(NSInputStream * _Nullable)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^ _Nullable)(NSProgress * _Nonnull progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}};
+    httpBodyStream:(NSInputStream *)httpBodyStream{{/hasOctetStreamBody}}{{#isUploadProgressSupported}}
+    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}};
 
 {{newline}}
 {{/operation}}

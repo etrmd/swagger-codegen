@@ -9,7 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CodegenOperation {
+    protected final Logger LOGGER = LoggerFactory.getLogger(DefaultGenerator.class);
     public final List<CodegenProperty> responseHeaders = new ArrayList<CodegenProperty>();
     public boolean hasAuthMethods, hasConsumes, hasProduces, hasParams, hasOptionalParams,
             returnTypeIsPrimitive, returnSimpleType, subresourceOperation, isMapContainer,
