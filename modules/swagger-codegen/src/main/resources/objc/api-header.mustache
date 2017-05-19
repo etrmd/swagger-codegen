@@ -21,7 +21,6 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
 /// HTTP Method: {{{httpMethod}}}
-///
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
 /// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
@@ -43,7 +42,6 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 /// {{#notes}}{{{notes}}}{{/notes}}
 ///
 /// HTTP Method: {{{httpMethod}}}
-///
 /// {{#allParams}}
 /// @param {{paramName}} {{description}}{{^description}}no description{{/description}}{{^required}} (optional) {{/required}}{{#defaultValue}} (default to {{{.}}}) {{/defaultValue}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
 /// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
