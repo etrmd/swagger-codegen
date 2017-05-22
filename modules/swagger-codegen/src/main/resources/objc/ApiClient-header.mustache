@@ -72,18 +72,19 @@ extern NSString * const {{classPrefix}}ResponseObjectErrorKey;
  *
  *@return The created session task.
  */
-- (NSURLSessionTask*)requestWithPath: (NSString*)path
-                               method: (NSString*)method
-                           pathParams: (NSDictionary *)pathParams
-                          queryParams: (NSDictionary*)queryParams
-                           formParams: (NSDictionary *)formParams
-                                files: (NSDictionary *)files
-                                 body: (id)body
-                         headerParams: (NSDictionary*)headerParams
-                         authSettings: (NSArray *)authSettings
-                   requestContentType: (NSString*)requestContentType
-                  responseContentType: (NSString*)responseContentType
-                         responseType: (NSString *)responseType
-                      completionBlock: (void (^)(id, NSError *))completionBlock;
+- (NSURLSessionTask*)requestWithPath:(NSString*)path
+                              method:(NSString*)method
+                          pathParams:(NSDictionary *)pathParams
+                         queryParams:(NSDictionary*)queryParams
+                          formParams:(NSDictionary *)formParams
+                               files:(NSDictionary *)files
+                                body:(id)body
+                        headerParams:(NSDictionary*)headerParams
+                        authSettings:(NSArray *)authSettings
+                  requestContentType:(NSString*)requestContentType
+                 responseContentType:(NSString*)responseContentType
+                        responseType:(NSString *)responseType
+                      uploadProgress:(void(^)(NSProgress *progress))uploadProgressBlock
+                     completionBlock:(void (^)(id, NSError *))completionBlock;
 
 @end

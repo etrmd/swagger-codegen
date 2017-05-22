@@ -58,12 +58,12 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 /// {{{notes}}}{{^notes}}no notes{{/notes}}
 /// {{#allParams}}
 /// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
+/// @param uploadProgressBlock A block for receiving an pload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}
 ///
 - (NSURLSessionTask *) {{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{^hasParams}}WithCompletionHandler:{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}
+    uploadProgress:(void(^)(NSProgress *progress))uploadProgressBlock{{/isUploadProgressSupported}}
     completionHandler:{{/hasParams}}(void (^)({{#returnBaseType}}{{{returnType}}} output, {{/returnBaseType}}NSError *error))handler {
     {{#allParams}}
     {{#required}}
@@ -151,16 +151,12 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
                         requestContentType:requestContentType
                        responseContentType:responseContentType
                               responseType:{{^returnType}}nil{{/returnType}}{{#returnType}}@"{{{ returnType }}}"{{/returnType}}
+                            uploadProgress:{{#isUploadProgressSupported}}uploadProgressBlock{{/isUploadProgressSupported}}{{^isUploadProgressSupported}}nil{{/isUploadProgressSupported}}
                            completionBlock:^(id data, NSError *error) {
                                 if(handler) {
                                     handler({{#returnType}}({{{ returnType }}})data, {{/returnType}}error);
                                 }
                             }];
-{{#isUploadProgressSupported}}
-        if (progressReceiver) {
-            progressReceiver([self.apiClient uploadProgressForTask:task]);
-        }
-{{/isUploadProgressSupported}}
     return task;
 }
 
@@ -173,12 +169,12 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
 /// {{{notes}}}
 /// {{#allParams}}
 /// @param {{paramName}} {{{description}}}{{^description}}no description{{/description}} {{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}) {{/required}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-/// @param progressReceiver A receiver of the upload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
+/// @param uploadProgressBlock A block for receiving an pload progress. Optional parameter.{{/isUploadProgressSupported}}{{/hasParams}}
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
 ///
 - (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
-    uploadProgressReceiver:(void(^)(NSProgress *progress))progressReceiver{{/isUploadProgressSupported}}{{/hasParams}} {
+    uploadProgress:(void(^)(NSProgress *progress))uploadProgressBlock{{/isUploadProgressSupported}}{{/hasParams}} {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set
@@ -264,6 +260,7 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
                         requestContentType:requestContentType
                        responseContentType:responseContentType
                               responseType:{{^returnType}}nil{{/returnType}}{{#returnType}}@"{{{ returnType }}}"{{/returnType}}
+                            uploadProgress:{{#isUploadProgressSupported}}uploadProgressBlock{{/isUploadProgressSupported}}{{^isUploadProgressSupported}}nil{{/isUploadProgressSupported}}
                            completionBlock:^(id data, NSError *error) {
                                if (error) {
                                    [subscriber sendError:error];
@@ -274,11 +271,6 @@ NSInteger k{{classname}}MissingParamErrorCode = 234513;
                                }{{/returnType}}
                                [subscriber sendCompleted];
                             }];
-{{#isUploadProgressSupported}}
-        if (progressReceiver) {
-            progressReceiver([self.apiClient uploadProgressForTask:task]);
-        }
-{{/isUploadProgressSupported}}
         RACDisposable *disposable = [RACDisposable disposableWithBlock:^{
             [task cancel];
         }];

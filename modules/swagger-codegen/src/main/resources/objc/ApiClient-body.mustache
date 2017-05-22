@@ -87,9 +87,9 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
 
 #pragma mark - Task Methods
 
-- (NSURLSessionDataTask*)taskWithCompletionBlock: (NSURLRequest *)request completionBlock: (void (^)(id, NSError *))completionBlock {
+- (NSURLSessionDataTask*)taskWithRequest:(NSURLRequest *)request uploadProgress:(void (^)(NSProgress *))uploadProgressBlock completionBlock:(void (^)(id, NSError *))completionBlock {
 
-    NSURLSessionDataTask *task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse *_Nonnull response, id  _Nullable responseObject, NSError *_Nullable error) {
+    NSURLSessionDataTask *task = [self dataTaskWithRequest:request uploadProgress:uploadProgressBlock downloadProgress:nil completionHandler:^(NSURLResponse *_Nonnull response, id  _Nullable responseObject, NSError *_Nullable error) {
         {{classPrefix}}DebugLogResponse(response, responseObject,request,error);
         if(!error) {
             completionBlock(responseObject, nil);
@@ -140,32 +140,33 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
 
 #pragma mark - Perform Request Methods
 
-- (NSURLSessionTask*)requestWithPath: (NSString*)path
-                               method: (NSString*)method
-                           pathParams: (NSDictionary *)pathParams
-                          queryParams: (NSDictionary*)queryParams
-                           formParams: (NSDictionary *)formParams
-                                files: (NSDictionary *)files
-                                 body: (id)body
-                         headerParams: (NSDictionary*)headerParams
-                         authSettings: (NSArray *)authSettings
-                   requestContentType: (NSString*)requestContentType
-                  responseContentType: (NSString*)responseContentType
-                         responseType: (NSString *)responseType
-                      completionBlock: (void (^)(id, NSError *))completionBlock {
+- (NSURLSessionTask*)requestWithPath:(NSString*)path
+                              method:(NSString*)method
+                          pathParams:(NSDictionary *)pathParams
+                         queryParams:(NSDictionary*)queryParams
+                          formParams:(NSDictionary *)formParams
+                               files:(NSDictionary *)files
+                                body:(id)body
+                        headerParams:(NSDictionary*)headerParams
+                        authSettings:(NSArray *)authSettings
+                  requestContentType:(NSString*)requestContentType
+                 responseContentType:(NSString*)responseContentType
+                        responseType:(NSString *)responseType
+                      uploadProgress:(void(^)(NSProgress *progress))uploadProgressBlock
+                     completionBlock:(void (^)(id, NSError *))completionBlock {
 
     AFHTTPRequestSerializer <AFURLRequestSerialization> *requestSerializer = [self requestSerializerForRequestContentType:requestContentType];
 
     __weak id<{{classPrefix}}Sanitizer> sanitizer = self.sanitizer;
 
-    BOOL isBodyInputStream = [body isKindOfClass:[NSInputStream class]];
+    BOOL isBodyFileURL = [body isKindOfClass:[NSURL class]] && [(NSURL *)body isFileURL];
 
     // sanitize parameters
     pathParams = [sanitizer sanitizeForSerialization:pathParams];
     queryParams = [sanitizer sanitizeForSerialization:queryParams];
     headerParams = [sanitizer sanitizeForSerialization:headerParams];
     formParams = [sanitizer sanitizeForSerialization:formParams];
-    if(![body isKindOfClass:[NSData class]] && !isBodyInputStream) {
+    if(![body isKindOfClass:[NSData class]] && !isBodyFileURL) {
         body = [sanitizer sanitizeForSerialization:body];
     }
 
@@ -206,9 +207,18 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
             request = [requestSerializer requestWithMethod:method URLString:urlString parameters:formParams error:&requestCreateError];
         }
         if (body) {
-            if (isBodyInputStream) {
+            if (isBodyFileURL) {
+                NSURL *fileURL = body;
+
+                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path error:nil];
+                NSNumber *fileSize = fileAttributes[NSFileSize];
+
                 request = [requestSerializer requestWithMethod:method URLString:urlString parameters:nil error:&requestCreateError];
-                request.HTTPBodyStream = body;
+
+                [request setValue:fileSize.stringValue forHTTPHeaderField:@"Content-Length"];
+                [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
+
+                request.HTTPBodyStream = [NSInputStream inputStreamWithURL:fileURL];
             } else {
                 request = [requestSerializer requestWithMethod:method URLString:urlString parameters:body error:&requestCreateError];
             }
@@ -237,7 +247,7 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
         }];
     } else {
         __weak typeof(self)weakSelf = self;
-        task = [self taskWithCompletionBlock:request completionBlock:^(id data, NSError *error) {
+        task = [self taskWithRequest:request uploadProgress:uploadProgressBlock completionBlock:^(id data, NSError *error) {
             NSError *serializationError;
             id response = [weakSelf.responseDeserializer deserialize:data class:responseType error:&serializationError];
 
