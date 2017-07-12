@@ -326,6 +326,16 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
             NSString *separatorStyle = separatorStyles[format];
             NSString *safeValue = {{classPrefix}}PercentEscapedStringFromString([values componentsJoinedByString:separatorStyle]);
             [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
+        } else if ([queryParam isKindOfClass:[NSNumber class]]) {
+            NSNumber *number = queryParam;
+            if ((strcmp([number objCType], @encode(char)) == 0)
+                && (number.charValue == 0 || number.charValue == 1)) {
+                NSString *safeValue = number.boolValue ? @"true" : @"false";
+                [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
+            } else {
+                NSString *safeValue = SWGPercentEscapedStringFromString([NSString stringWithFormat:@"%@",queryParam]);
+                [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
+            }
         } else {
             NSString *safeValue = {{classPrefix}}PercentEscapedStringFromString([NSString stringWithFormat:@"%@",queryParam]);
             [requestUrl appendString:[NSString stringWithFormat:@"%@%@=%@", separator, safeKey, safeValue]];
