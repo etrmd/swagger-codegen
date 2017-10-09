@@ -46,12 +46,28 @@
 }
 
 - (void)logResponse:(NSURLResponse *)response responseObject:(id)responseObject request:(NSURLRequest *)request error:(NSError *)error {
-    NSString *message = [NSString stringWithFormat:@"\n[DEBUG] HTTP request body \n~BEGIN~\n %@\n~END~\n"\
-                         "[DEBUG] HTTP response body \n~BEGIN~\n %@\n~END~\n",
-                                                   [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                   responseObject];
+    NSHTTPURLResponse *httpResponse = nil;
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        httpResponse = (NSHTTPURLResponse *)response;
+    }
 
-    {{classPrefix}}DebugLog(message);
+    NSString *responseString = nil;
+    if ([responseObject isKindOfClass:[NSData class]]) {
+        responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+    }
+
+    NSString *message = [NSString stringWithFormat:
+                         @"\n[DEBUG] HTTP request %@ %@, headers:\n%@, body:\n~BEGIN~\n%@\n~END~"
+                         @"\n[DEBUG] HTTP response %ld, headers:\n%@, body:\n~BEGIN~\n%@\n~END~\n",
+                         request.HTTPMethod,
+                         request.URL,
+                         request.allHTTPHeaderFields,
+                         [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
+                         (long)httpResponse.statusCode,
+                         httpResponse.allHeaderFields,
+                         responseString ?: responseObject];
+
+    SWGDebugLog(message);
 }
 
 - (void)setLoggingFile:(NSString *)loggingFile {
