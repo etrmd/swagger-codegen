@@ -111,7 +111,7 @@ static NSString *{{classPrefix}}__fileNameForResponse(NSURLResponse *response) {
 
     __block NSString *tempFolderPath = [self.configuration.tempFolderPath copy];
 
-    NSURLSessionDataTask*task = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    NSURLSessionDataTask *task = [self dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         {{classPrefix}}DebugLogResponse(response, responseObject,request,error);
 
         if(error) {
