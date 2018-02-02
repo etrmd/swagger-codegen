@@ -56,30 +56,39 @@
         responseString = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
     }
 
-    NSString *message = nil;
     if (httpResponse) {
-        message = [NSString stringWithFormat:
-                   @"\n[DEBUG] HTTP request %@ %@, headers:\n%@, body:\n~BEGIN~\n%@\n~END~"
-                   @"\n[DEBUG] HTTP response %ld, headers:\n%@, body:\n~BEGIN~\n%@\n~END~\n",
-                   request.HTTPMethod,
-                   request.URL,
-                   request.allHTTPHeaderFields,
-                   [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
-                   (long)httpResponse.statusCode,
-                   httpResponse.allHeaderFields,
-                   responseString ?: responseObject];
+        SWGDebugLog(@"\n[DEBUG] HTTP request %@ %@, headers:"
+                    @"\n%@, body:"
+                    @"\n~BEGIN~"
+                    @"\n%@"
+                    @"\n~END~"
+                    @"\n[DEBUG] HTTP response %ld, headers:"
+                    @"\n%@, body:"
+                    @"\n~BEGIN~"
+                    @"\n%@"
+                    @"\n"
+                    @"~END~"
+                    @"\n",
+                    request.HTTPMethod,
+                    request.URL,
+                    request.allHTTPHeaderFields,
+                    [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
+                    (long)httpResponse.statusCode,
+                    httpResponse.allHeaderFields,
+                    responseString ?: responseObject);
     } else {
-        message = [NSString stringWithFormat:
-                   @"\n[DEBUG] HTTP request %@ %@, headers:\n%@, body:\n~BEGIN~\n%@\n~END~"
-                   @"\n[DEBUG] HTTP request error: %@",
-                   request.HTTPMethod,
-                   request.URL,
-                   request.allHTTPHeaderFields,
-                   [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
-                   error];
+        SWGDebugLog(@"\n[DEBUG] HTTP request %@ %@, headers:"
+                    @"\n%@, body:"
+                    @"\n~BEGIN~"
+                    @"\n%@"
+                    @"\n~END~"
+                    @"\n[DEBUG] HTTP request error: %@",
+                    request.HTTPMethod,
+                    request.URL,
+                    request.allHTTPHeaderFields,
+                    [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding],
+                    error);
     }
-
-    SWGDebugLog(message);
 }
 
 - (void)setLoggingFile:(NSString *)loggingFile {
