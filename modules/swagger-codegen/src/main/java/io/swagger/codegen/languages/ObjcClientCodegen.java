@@ -352,7 +352,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                         return getSwaggerType(p) + "<" + innerTypeDeclaration + " *> *";
                     }
                 }
-                return getSwaggerType(p) + "<" + innerTypeDeclaration + "> *";
+                return getSwaggerType(p) + "<" + innerTypeDeclaration + "*> *";
             }
         } else if (p instanceof MapProperty) {
             MapProperty mp = (MapProperty) p;
