@@ -50,7 +50,7 @@ extern NSInteger k{{classname}}MissingParamErrorCode;
 ///  code:{{{code}}} message:"{{{message}}}"{{#hasMore}},{{/hasMore}}{{/responses}}
 ///
 /// @returns RACSignal {{#returnType}}<{{{returnType}}}>*{{/returnType}}
-- (RACSignal {{#returnBaseType}}<{{{returnType}}}> {{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
+- (RACSignal{{#returnBaseType}}<{{{returnType}}}>{{/returnBaseType}} *){{#vendorExtensions.x-objc-operationId}}{{vendorExtensions.x-objc-operationId}}{{/vendorExtensions.x-objc-operationId}}{{^vendorExtensions.x-objc-operationId}}{{nickname}}{{#hasParams}}With{{vendorExtensions.firstParamAltName}}{{/hasParams}}{{/vendorExtensions.x-objc-operationId}}{{#allParams}}{{#secondaryParam}}
     {{paramName}}{{/secondaryParam}}:({{{dataType}}}){{paramName}}{{/allParams}}{{#hasParams}}{{#isUploadProgressSupported}}
     uploadProgress:(void(^)(NSProgress *progress))uploadProgressBlock{{/isUploadProgressSupported}}{{/hasParams}};
 

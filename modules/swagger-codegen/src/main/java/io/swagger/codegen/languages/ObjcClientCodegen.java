@@ -311,7 +311,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
         if (languageSpecificPrimitives.contains(name) && !foundationClasses.contains(name)) {
             return name;
         } else {
-            return name + "*";
+            return name + " *";
         }
     }
 
@@ -342,17 +342,17 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
             // In this condition, type of property p is array of primitive,
             // return container type with pointer, e.g. `NSArray*<NSString*>*'
             if (languageSpecificPrimitives.contains(innerTypeDeclaration)) {
-                return getSwaggerType(p) +  "<" + innerTypeDeclaration + "*>*";
+                return getSwaggerType(p) +  "<" + innerTypeDeclaration + " *> *";
             }
             // In this condition, type of property p is array of model,
             // return container type combine inner type with pointer, e.g. `NSArray<SWGTag>*'
             else {
                 for (String sd : advancedMapingTypes) {
                     if(innerTypeDeclaration.startsWith(sd)) {
-                        return getSwaggerType(p) + "<" + innerTypeDeclaration + "*>*";
+                        return getSwaggerType(p) + "<" + innerTypeDeclaration + " *> *";
                     }
                 }
-                return getSwaggerType(p) + "<" + innerTypeDeclaration + ">*";
+                return getSwaggerType(p) + "<" + innerTypeDeclaration + "> *";
             }
         } else if (p instanceof MapProperty) {
             MapProperty mp = (MapProperty) p;
@@ -364,14 +364,14 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
                 innerTypeDeclaration = innerTypeDeclaration.substring(0, innerTypeDeclaration.length() - 1);
             }
             if (languageSpecificPrimitives.contains(innerTypeDeclaration)) {
-                return getSwaggerType(p) +  "<NSString*, " + innerTypeDeclaration + "*>*";
+                return getSwaggerType(p) +  "<NSString *, " + innerTypeDeclaration + " *> *";
             } else {
                 for (String s : advancedMapingTypes) {
                     if(innerTypeDeclaration.startsWith(s)) {
-                        return getSwaggerType(p) + "<NSString*, " + innerTypeDeclaration + "*>*";
+                        return getSwaggerType(p) + "<NSString *, " + innerTypeDeclaration + " *> *";
                     }
                 }
-                return getSwaggerType(p) + "<" + innerTypeDeclaration + ">*";
+                return getSwaggerType(p) + "<" + innerTypeDeclaration + "> *";
             }
         } else {
             String swaggerType = getSwaggerType(p);
@@ -379,7 +379,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
             // return type of p with pointer, e.g. `NSNumber*'
             if (languageSpecificPrimitives.contains(swaggerType) &&
                     foundationClasses.contains(swaggerType)) {
-                return swaggerType + "*";
+                return swaggerType + " *";
             }
             // In this condition, type of p is c primitive type, e.g. `bool',
             // return type of p, e.g. `bool'
@@ -389,7 +389,7 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
             // In this condition, type of p is objective-c object type, e.g. `SWGPet',
             // return type of p with pointer, e.g. `SWGPet*'
             else {
-                return swaggerType + "*";
+                return swaggerType + " *";
             }
         }
     }
