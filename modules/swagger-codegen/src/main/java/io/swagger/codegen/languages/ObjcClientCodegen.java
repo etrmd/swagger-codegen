@@ -319,8 +319,8 @@ public class ObjcClientCodegen extends DefaultCodegen implements CodegenConfig {
     public String getSwaggerType(Property p) {
         String swaggerType = super.getSwaggerType(p);
         String type = null;
-        if (typeMapping.containsKey(swaggerType.toLowerCase())) {
-            type = typeMapping.get(swaggerType.toLowerCase());
+        if (typeMapping.containsKey(swaggerType)) {
+            type = typeMapping.get(swaggerType);
             if (languageSpecificPrimitives.contains(type) && !foundationClasses.contains(type)) {
                 return toModelNameWithoutReservedWordCheck(type);
             }
